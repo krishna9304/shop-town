@@ -1,58 +1,56 @@
-const ShopCard = () => {
+const ShopCard = ({ shopInfo }) => {
   return (
     <div className="max-w-xs rounded overflow-hidden shadow-lg">
-      <img
-        className="w-full"
-        src="https://cms.hostelworld.com/hwblog/wp-content/uploads/sites/2/2018/12/kirkjufell.jpg"
-        alt="Sunset in the mountains"
-      />
+      <div className="flex gap-4 overflow-x-auto bg-black">
+        <img
+          className="w-full"
+          src="https://cms.hostelworld.com/hwblog/wp-content/uploads/sites/2/2018/12/kirkjufell.jpg"
+          alt="Sunset in the mountains"
+        />
+        <img
+          className="w-full"
+          src="https://cms.hostelworld.com/hwblog/wp-content/uploads/sites/2/2018/12/kirkjufell.jpg"
+          alt="Sunset in the mountains"
+        />
+        <img
+          className="w-full"
+          src="https://cms.hostelworld.com/hwblog/wp-content/uploads/sites/2/2018/12/kirkjufell.jpg"
+          alt="Sunset in the mountains"
+        />
+      </div>
       <div className="px-6 py-4">
-        <div className="font-bold text-xl mb-2">The Coldest Sunset</div>
-        <div className="flex">
-          <div className="flex flex-col w-1/2">
-            <div className="text-sm font-light">Address :</div>
-            <div className="text-sm font-light">Email : </div>
-            <div className="text-sm font-light">Contact No :</div>
-            <div className="text-sm font-light">Website : </div>
-            <div className="text-sm font-light">Opening Hours : </div>
+        <div className="font-bold text-xl mb-2">{shopInfo.shopName}</div>
+        <div className="flex flex-col">
+          <div className="w-full flex">
+            <div className="w-1/2 font-bold text-xs">Category: </div>
+            <div className="w-1/2 text-xs">{shopInfo.shopCategory}</div>
           </div>
-          <div className="flex flex-col w-1/2">
-            <div className="text-sm font-light">Jamshedpur</div>
-            <a
-              href="mailto:something@gmail.com"
-              className="text-sm hover:underline text-blue-700"
-            >
-              something@gmail.com
-            </a>
-            <div className="text-sm font-light">9876543210</div>
-            <a
-              href="https://shop.com"
-              target="_blank"
-              rel="noreferrer"
-              className="text-sm hover:underline text-blue-700"
-            >
-              shop.com
-            </a>
-            <div className="text-sm font-light">
-              <span className="text-green-600 text-xs font-bold">9:00AM</span>
-              &nbsp;-
-              <span className="text-green-600 text-xs font-bold">
-                &nbsp;10:30PM
-              </span>
+          <div className="w-full flex ">
+            <div className="w-1/2 font-bold text-xs">Opening Hours: </div>
+            <div className="w-1/2 text-green-600 text-xs font-bold ">
+              {shopInfo.openingHours[0].slice(
+                11,
+                shopInfo.openingHours[0].length - 9
+              )}
+              &nbsp;-&nbsp;
+              {shopInfo.openingHours[1].slice(
+                11,
+                shopInfo.openingHours[1].length - 9
+              )}
             </div>
           </div>
         </div>
       </div>
       <div className="px-6 pb-2">
-        <span className="inline-block bg-gray-200 rounded-full px-3 py-1 text-sm font-semibold text-gray-700 mr-2 mb-2">
-          #photography
-        </span>
-        <span className="inline-block bg-gray-200 rounded-full px-3 py-1 text-sm font-semibold text-gray-700 mr-2 mb-2">
-          #travel
-        </span>
-        <span className="inline-block bg-gray-200 rounded-full px-3 py-1 text-sm font-semibold text-gray-700 mr-2 mb-2">
-          #winter
-        </span>
+        {Object.keys(shopInfo.availableProducts)
+          .slice(0, 3)
+          .map((key) => {
+            return (
+              <span className="inline-block bg-gray-200 rounded-full px-3 py-1 text-sm font-semibold text-blue-500 mr-2 mb-2">
+                #{shopInfo.availableProducts[key]}
+              </span>
+            );
+          })}
       </div>
     </div>
   );
