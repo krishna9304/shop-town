@@ -10,7 +10,6 @@ import {
   Upload,
   Modal,
   notification,
-  Spin,
 } from "antd";
 import ReactMapGL, { Marker } from "react-map-gl";
 import "mapbox-gl/dist/mapbox-gl.css";
@@ -120,14 +119,6 @@ const ShopForm = () => {
       });
     });
   }
-  if (!shop)
-    return (
-      <div className="w-screen flex justify-center items-center">
-        <h1 className="text-3xl font-light text-blue-500">
-          Loading... <Spin />
-        </h1>
-      </div>
-    );
   return (
     <div className="min-h-screen w-screen">
       <div className="w-full flex justify-center items-center p-10 pb-0">
@@ -298,9 +289,12 @@ const ShopForm = () => {
             <div className="flex flex-wrap gap-4 pt-4">
               {(() => {
                 if (shopFormData.availableProducts) {
-                  return products.map((prod) => {
+                  return products.map((prod, idx) => {
                     return (
-                      <div className="px-2 py-1 border border-blue-600 text-blue-600">
+                      <div
+                        key={idx}
+                        className="px-2 py-1 border border-blue-600 text-blue-600"
+                      >
                         {prod}
                       </div>
                     );

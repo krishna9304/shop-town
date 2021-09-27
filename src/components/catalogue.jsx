@@ -3,11 +3,16 @@ import ShopCard from "./card";
 import "./catalogue.css";
 import { getDatabase, onValue, ref } from "@firebase/database";
 import { Empty, Spin } from "antd";
-import Text from "antd/lib/typography/Text";
+import { getShops } from "../utilities/getShops";
+import { useSelector } from "react-redux";
 
-const Catalogue = ({ radius, setRadius }) => {
+const Catalogue = ({ finalShops, setFinalShops }) => {
   const [scroll, setScroll] = useState(0);
   const [shops, setShops] = useState(null);
+  const { userCurrLoc } = useSelector((state) => state);
+  const [searchText, setSearchText] = useState("");
+  const [searchResults, setSearchResults] = useState(null);
+
   useEffect(() => {
     window.onscroll = (e) => {
       setScroll(window.scrollY);
@@ -22,11 +27,19 @@ const Catalogue = ({ radius, setRadius }) => {
       setShops(snapshot.toJSON());
     });
   }, []);
-  if (!shops)
+
+  useEffect(() => {
+    if (shops && userCurrLoc) {
+      setFinalShops(getShops(shops, userCurrLoc));
+    }
+    // eslint-disable-next-line
+  }, [shops, userCurrLoc]);
+
+  if (!finalShops)
     return (
       <div className="w-screen p-10 flex justify-center items-center">
-        <h1 className="text-3xl font-light text-blue-500">
-          Loading shops... <Spin />
+        <h1 className="md:text-3xl text-2xl font-light text-center">
+          Loading businesses near you <Spin />
         </h1>
       </div>
     );
@@ -45,33 +58,22 @@ const Catalogue = ({ radius, setRadius }) => {
           }`}
         >
           <input
+            onChange={(e) => {
+              setSearchText(e.target.value);
+            }}
             className="w-full md:w-1/2 bg-gray-200 p-2 outline-none rounded-lg text-gray-700 font-light text-sm"
             type="text"
             placeholder="Search for shops"
           />
-          <div className="flex flex-col w-full md:w-1/6 border p-2 gap-2">
-            <Text className="text-xs">*Select range (in meters)</Text>
-            <input
-              onChange={(e) => {
-                setRadius(e.target.value);
-              }}
-              className="rounded-lg overflow-hidden appearance-none bg-gray-400 h-3 w-full"
-              type="range"
-              min="1"
-              max="2"
-              step="0.001"
-              value={radius}
-            />
-          </div>
         </div>
         <div
           className={`w-full p-6 flex flex-wrap gap-8 justify-center md:justify-start ${
             scroll > 450 ? "mt-24 md:mt-20" : ""
           }`}
         >
-          {shops ? (
-            Object.keys(shops).map((key) => {
-              return <ShopCard shopInfo={shops[key]} />;
+          {finalShops ? (
+            finalShops.map((shop, idx) => {
+              return <ShopCard key={idx} shopInfo={shop} />;
             })
           ) : (
             <Empty description="No shops around you!" />

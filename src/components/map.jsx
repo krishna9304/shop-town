@@ -1,33 +1,21 @@
 import React, { useEffect, useState } from "react";
 import ReactMapGL, { Marker } from "react-map-gl";
+import { useSelector } from "react-redux";
 
-const Map = ({ radius, hide }) => {
-  const [center, setCenter] = useState([0, 0]);
+const Map = ({ hide, shops }) => {
+  const center = useSelector((state) => state.userCurrLoc);
   let [viewport, setViewport] = useState({
     latitude: 0,
     longitude: 0,
-    zoom: 14,
+    zoom: 13,
     width: "100%",
     height: "100%",
   });
 
   useEffect(() => {
-    navigator.geolocation.getCurrentPosition(
-      (pos) => {
-        setCenter([pos.coords.longitude, pos.coords.latitude]);
-      },
-      (err) => {
-        console.error(err);
-      },
-      {
-        enableHighAccuracy: true,
-      }
-    );
-    return () => {};
-  }, []);
-
-  useEffect(() => {
-    setViewport((v) => ({ ...v, latitude: center[1], longitude: center[0] }));
+    if (center) {
+      setViewport((v) => ({ ...v, latitude: center[1], longitude: center[0] }));
+    }
   }, [center]);
 
   return (
@@ -42,20 +30,44 @@ const Map = ({ radius, hide }) => {
         {...viewport}
         onViewportChange={(nextView) => setViewport(nextView)}
       >
-        <Marker latitude={center[1]} longitude={center[0]}>
+        <Marker
+          latitude={center ? center[1] : 0}
+          longitude={center ? center[0] : 0}
+        >
           <div
             style={{
-              marginTop: (-(viewport.zoom ** 2.9 / 100) / 2) * radius,
-              marginLeft: (-(viewport.zoom ** 2.9 / 100) / 2) * radius,
-              height: (viewport.zoom ** 2.9 / 100) * radius,
-              width: (viewport.zoom ** 2.9 / 100) * radius,
+              marginTop: -(viewport.zoom ** 3 / 60) / 2,
+              marginLeft: -(viewport.zoom ** 3 / 60) / 2,
+              height: viewport.zoom ** 3 / 60,
+              width: viewport.zoom ** 3 / 60,
             }}
             className="bg-indigo-500 bg-opacity-25 rounded-full border-white"
           ></div>
         </Marker>
-        <Marker latitude={center[1]} longitude={center[0]}>
+        <Marker
+          latitude={center ? center[1] : 0}
+          longitude={center ? center[0] : 0}
+        >
           <div className="bg-indigo-500 w-4 h-4 transform -translate-x-2 -translate-y-2 rounded-full border-white border-2"></div>
         </Marker>
+        {shops
+          ? shops.map((shop) => {
+              return (
+                <Marker
+                  latitude={shop.locationCoords[1]}
+                  longitude={shop.locationCoords[0]}
+                >
+                  <div className="w-6 h-6">
+                    <img
+                      className="w-full h-full"
+                      src="/shopmarker.png"
+                      alt="shop"
+                    />
+                  </div>
+                </Marker>
+              );
+            })
+          : null}
       </ReactMapGL>
     </div>
   );

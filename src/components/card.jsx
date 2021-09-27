@@ -1,4 +1,7 @@
+import { useSelector } from "react-redux";
+
 const ShopCard = ({ shopInfo }) => {
+  const user = useSelector((state) => state.user);
   return (
     <div className="max-w-xs rounded overflow-hidden shadow-lg">
       <div className="flex gap-4 overflow-x-auto bg-black">
@@ -19,7 +22,14 @@ const ShopCard = ({ shopInfo }) => {
         />
       </div>
       <div className="px-6 py-4">
-        <div className="font-bold text-xl mb-2">{shopInfo.shopName}</div>
+        <div className="font-bold text-xl mb-2 cursor-pointer hover:text-blue-500 hover:underline">
+          {shopInfo.shopName}
+          {user && shopInfo.workEmail === user.email ? (
+            <span className="text-xs px-1 py-0.5 mx-2 bg-yellow-600 text-white rounded-full">
+              {shopInfo.workEmail === user.email ? "Your shop" : ""}
+            </span>
+          ) : null}
+        </div>
         <div className="flex flex-col">
           <div className="w-full flex">
             <div className="w-1/2 font-bold text-xs">Category: </div>
@@ -46,7 +56,10 @@ const ShopCard = ({ shopInfo }) => {
           .slice(0, 3)
           .map((key) => {
             return (
-              <span className="inline-block bg-gray-200 rounded-full px-3 py-1 text-sm font-semibold text-blue-500 mr-2 mb-2">
+              <span
+                key={key}
+                className="inline-block bg-gray-200 rounded-full px-3 py-1 text-sm font-semibold text-blue-500 mr-2 mb-2"
+              >
                 #{shopInfo.availableProducts[key]}
               </span>
             );

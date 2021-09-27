@@ -5,12 +5,13 @@ import NavBar from "../components/navBar";
 
 const HomePage = () => {
   const [hide, setHide] = useState(false);
-  const [radius, setRadius] = useState(0);
+  const [finalShops, setFinalShops] = useState(null);
+
   return (
     <div className="h-screen w-screen flex flex-col">
       <NavBar hide={hide} setHide={setHide} />
-      <Map hide={hide} radius={radius} />
-      <Catalogue radius={radius} setRadius={setRadius} />
+      <Map shops={finalShops} hide={hide} />
+      <Catalogue finalShops={finalShops} setFinalShops={setFinalShops} />
     </div>
   );
 };

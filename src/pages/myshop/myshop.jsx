@@ -1,18 +1,10 @@
-import { Empty, Spin, Tabs } from "antd";
+import { Empty, Tabs } from "antd";
 import Text from "antd/lib/typography/Text";
 import React from "react";
 import { useSelector } from "react-redux";
 
 const MyShop = () => {
   const { shop } = useSelector((state) => state);
-  if (!shop)
-    return (
-      <div className="w-screen flex justify-center items-center">
-        <h1 className="text-3xl font-light text-blue-500">
-          Fetching shop info... <Spin />
-        </h1>
-      </div>
-    );
   return (
     <div
       className={`w-screen flex justify-center items-center ${
@@ -117,7 +109,10 @@ const MyShop = () => {
                   </Text>
                   {Object.keys(shop.availableProducts).map((key) => {
                     return (
-                      <div className="px-2 py-1 border border-purple-600 text-purple-600">
+                      <div
+                        key={key}
+                        className="px-2 py-1 border border-purple-600 text-purple-600"
+                      >
                         {shop.availableProducts[key]}
                       </div>
                     );

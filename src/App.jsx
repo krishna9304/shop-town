@@ -4,15 +4,35 @@ import { useDispatch, useSelector } from "react-redux";
 import "./App.css";
 import HomePage from "./pages/homepage";
 import MyShopMain from "./pages/myshop";
-import { setAuth, setShop, setUser } from "./redux/actions/actions";
+import {
+  setAuth,
+  setLocation,
+  setShop,
+  setUser,
+} from "./redux/actions/actions";
 import "antd/dist/antd.css";
 import { BrowserRouter, Switch, Route } from "react-router-dom";
 import { getDatabase, onValue, ref } from "@firebase/database";
-import { Spin } from "antd";
 
 function App() {
   const dispatch = useDispatch();
   const user = useSelector((state) => state.user);
+  useEffect(() => {
+    navigator.geolocation.getCurrentPosition(
+      (pos) => {
+        dispatch(setLocation([pos.coords.longitude, pos.coords.latitude]));
+      },
+      (err) => {
+        console.error(err);
+      },
+      {
+        enableHighAccuracy: true,
+      }
+    );
+    return () => {};
+    // eslint-disable-next-line
+  }, []);
+
   useEffect(() => {
     const auth = getAuth();
     onAuthStateChanged(auth, (user) => {
@@ -36,14 +56,7 @@ function App() {
 
     // eslint-disable-next-line
   }, []);
-  if (!user)
-    return (
-      <div className="w-screen h-screen flex justify-center items-center">
-        <h1 className="text-3xl font-light text-blue-500">
-          Loading... <Spin />
-        </h1>
-      </div>
-    );
+
   return (
     <div className="App">
       <BrowserRouter>

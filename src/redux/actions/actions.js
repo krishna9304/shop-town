@@ -16,3 +16,7 @@ export const setReviews = (reviews) => ({
   type: ActionTypes.REVIEWS,
   payload: reviews,
 });
+export const setLocation = (loc) => ({
+  type: ActionTypes.LOC,
+  payload: loc,
+});

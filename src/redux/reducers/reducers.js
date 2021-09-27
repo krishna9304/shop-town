@@ -4,6 +4,7 @@ let default_state = {
   user: null,
   shop: null,
   reviews: [],
+  userCurrLoc: null,
 };
 
 let reducerFunction = (state = default_state, action) => {
@@ -16,6 +17,8 @@ let reducerFunction = (state = default_state, action) => {
       return { ...state, shop: action.payload };
     case ActionTypes.REVIEWS:
       return { ...state, reviews: action.payload };
+    case ActionTypes.LOC:
+      return { ...state, userCurrLoc: action.payload };
     default:
       return state;
   }
