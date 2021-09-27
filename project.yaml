@@ -1,7 +1,7 @@
 # name of author
-name: John Doe
+name: Krishna Mahato
 # college registeration number
-regdno: 123456789
+regdno: 2041013021
 # github username
 github: krishna9304
 # set number (1/2/3)
@@ -9,6 +9,6 @@ set: 1
 # problem statement number (1/2/3/4)
 question: 1
 # description of the project
-description: The project is hosted on and the link is https://create-react-app.dev/ and the project is made with ReactJS
+description: The project is hosted on vercel and the link is https://shop-town.vercel.app/ and the project is made with ReactJS , Redux for frontend, firebase for backend and MAPBOX for Map API.
 # credits of project
-credits: Google, Github
+credits: Google, Github, Vercel, Mapbox
