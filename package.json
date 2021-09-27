@@ -8,6 +8,8 @@
     "@testing-library/react": "^11.1.0",
     "@testing-library/user-event": "^12.1.10",
     "antd": "^4.16.13",
+    "filestack-js": "^3.24.1",
+    "filestack-react": "^4.0.1",
     "firebase": "^9.0.2",
     "mapbox-gl": "^2.4.1",
     "moment": "^2.29.1",

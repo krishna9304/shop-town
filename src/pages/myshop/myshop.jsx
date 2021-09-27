@@ -2,9 +2,10 @@ import { Empty, Tabs } from "antd";
 import Text from "antd/lib/typography/Text";
 import React from "react";
 import { useSelector } from "react-redux";
+import ReviewCard from "../../components/reviewCard";
 
 const MyShop = () => {
-  const { shop } = useSelector((state) => state);
+  const { shop, reviews } = useSelector((state) => state);
   return (
     <div
       className={`w-screen flex justify-center items-center ${
@@ -22,27 +23,23 @@ const MyShop = () => {
         ></Empty>
       ) : (
         <div className="w-screen md:shadow-lg">
-          <div className="w-full h-96 bg-black flex overflow-x-auto gap-4">
-            <img
-              className="w-full h-full bg-cover"
-              src="https://cms.hostelworld.com/hwblog/wp-content/uploads/sites/2/2018/12/kirkjufell.jpg"
-              alt="shop"
-            />
-            <img
-              className="w-full h-full bg-cover"
-              src="https://cms.hostelworld.com/hwblog/wp-content/uploads/sites/2/2018/12/kirkjufell.jpg"
-              alt="shop"
-            />
-            <img
-              className="w-full h-full bg-cover"
-              src="https://cms.hostelworld.com/hwblog/wp-content/uploads/sites/2/2018/12/kirkjufell.jpg"
-              alt="shop"
-            />
-            <img
-              className="w-full h-full bg-cover"
-              src="https://cms.hostelworld.com/hwblog/wp-content/uploads/sites/2/2018/12/kirkjufell.jpg"
-              alt="shop"
-            />
+          <div className="w-full h-96 bg-black flex overflow-x-auto gap-1">
+            {shop.photos ? (
+              Object.values(shop.photos).map((photo, idx) => {
+                return (
+                  <img
+                    className="w-full h-full"
+                    key={idx}
+                    src={photo}
+                    alt="shop"
+                  />
+                );
+              })
+            ) : (
+              <h1 className="text-white w-full h-full flex justify-center items-center">
+                No photos
+              </h1>
+            )}
           </div>
           <div className="w-full px-4 py-2 flex text-3xl font-light shadow-lg text-center justify-center items-center">
             ⚈ &nbsp;{shop.shopName}&nbsp; ⚈
@@ -99,7 +96,13 @@ const MyShop = () => {
               </div>
             </Tabs.TabPane>
             <Tabs.TabPane tab="Reviews" key="2">
-              Content of Tab Pane 2
+              <div className="w-screen flex flex-col justify-center items-center gap-4">
+                <div className="flex flex-col gap-4 justify-center items-center w-full md:w-1/2 border p-4">
+                  {reviews.map((rev, idx) => {
+                    return <ReviewCard key={idx} review={rev} />;
+                  })}
+                </div>
+              </div>
             </Tabs.TabPane>
             <Tabs.TabPane tab="Available Products" key="3">
               <div className="w-screen flex justify-center items-center">

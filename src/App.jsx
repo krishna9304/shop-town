@@ -7,12 +7,14 @@ import MyShopMain from "./pages/myshop";
 import {
   setAuth,
   setLocation,
+  setReviews,
   setShop,
   setUser,
 } from "./redux/actions/actions";
 import "antd/dist/antd.css";
 import { BrowserRouter, Switch, Route } from "react-router-dom";
 import { getDatabase, onValue, ref } from "@firebase/database";
+import ShopProfile from "./pages/shopProfile";
 
 function App() {
   const dispatch = useDispatch();
@@ -48,6 +50,12 @@ function App() {
             console.log("shop not found");
           }
         });
+        const reviewRef = ref(db, "reviews/" + user.uid);
+        onValue(reviewRef, (snapshot) => {
+          if (snapshot.exists()) {
+            dispatch(setReviews(Object.values(snapshot.toJSON())));
+          }
+        });
       } else {
         dispatch(setUser(null));
         dispatch(setAuth(false));
@@ -80,6 +88,12 @@ function App() {
             render={() => {
               if (user) return <MyShopMain />;
               return <HomePage />;
+            }}
+          />
+          <Route
+            path="/shops/:uid"
+            render={() => {
+              return <ShopProfile />;
             }}
           />
         </Switch>

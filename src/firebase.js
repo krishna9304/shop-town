@@ -3,13 +3,13 @@ import { initializeApp } from "firebase/app";
 
 // Your web app's Firebase configuration
 const firebaseConfig = {
-  apiKey: "AIzaSyDkoGBLAY_UqN-sil3prtqyBVmhFtGTeBQ",
-  authDomain: "shoptown-b10c7.firebaseapp.com",
-  databaseURL: "https://shoptown-b10c7-default-rtdb.firebaseio.com",
-  projectId: "shoptown-b10c7",
-  storageBucket: "shoptown-b10c7.appspot.com",
-  messagingSenderId: "498257638901",
-  appId: "1:498257638901:web:87fc4e2148cb65788fdcbc",
+  apiKey: process.env.REACT_APP_FIREBASE_API_KEY,
+  authDomain: process.env.REACT_APP_AUTH_DOMAIN,
+  databaseURL: process.env.REACT_APP_DATABASE_URL,
+  projectId: process.env.REACT_APP_PROJECT_ID,
+  storageBucket: process.env.REACT_APP_STORAGE,
+  messagingSenderId: process.env.REACT_APP_MESSAGING_SENDER_ID,
+  appId: process.env.APP_ID,
 };
 
 // Initialize Firebase

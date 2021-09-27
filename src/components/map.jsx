@@ -51,9 +51,10 @@ const Map = ({ hide, shops }) => {
           <div className="bg-indigo-500 w-4 h-4 transform -translate-x-2 -translate-y-2 rounded-full border-white border-2"></div>
         </Marker>
         {shops
-          ? shops.map((shop) => {
+          ? shops.map((shop, key) => {
               return (
                 <Marker
+                  key={key}
                   latitude={shop.locationCoords[1]}
                   longitude={shop.locationCoords[0]}
                 >

@@ -64,9 +64,10 @@ const NavBar = ({ hide, setHide, mapControl }) => {
         {!user ? (
           <button
             onClick={signInEvent}
-            className="text-white text-xs md:text-sm bg-blue-900 p-1 px-4 rounded-full hover:bg-blue-700 cursor-pointer select-none shadow-xl"
+            className="text-white flex gap-2 text-xs justify-center items-center md:text-sm bg-blue-900 p-2 px-4 rounded-full hover:bg-blue-700 cursor-pointer select-none shadow-xl"
           >
-            Login with google
+            <img className="w-3.5 h-3.w-3.5" src="/google.png" alt="google" />
+            Google
           </button>
         ) : (
           <>

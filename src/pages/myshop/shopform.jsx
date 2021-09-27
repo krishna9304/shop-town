@@ -1,5 +1,4 @@
 import React, { useEffect, useState } from "react";
-import { PlusOutlined } from "@ant-design/icons";
 import {
   Form,
   Input,
@@ -7,8 +6,6 @@ import {
   Select,
   TimePicker,
   Checkbox,
-  Upload,
-  Modal,
   notification,
 } from "antd";
 import ReactMapGL, { Marker } from "react-map-gl";
@@ -17,15 +14,7 @@ import { getDatabase, ref, set } from "@firebase/database";
 import { useSelector } from "react-redux";
 import moment from "moment";
 import Text from "antd/lib/typography/Text";
-
-function getBase64(file) {
-  return new Promise((resolve, reject) => {
-    const reader = new FileReader();
-    reader.readAsDataURL(file);
-    reader.onload = () => resolve(reader.result);
-    reader.onerror = (error) => reject(error);
-  });
-}
+import { PickerDropPane } from "filestack-react";
 
 const ShopForm = () => {
   const { shop, user } = useSelector((state) => state);
@@ -33,6 +22,7 @@ const ShopForm = () => {
   const [center, setCenter] = useState([0, 0]);
   const [products, setProducts] = useState([]);
   const [product, setProduct] = useState("");
+  const [files, setFiles] = useState([]);
   const [shopFormData, setShopFormData] = useState({
     shopName: "",
     shopCategory: "",
@@ -41,24 +31,27 @@ const ShopForm = () => {
     websiteURL: "",
     workEmail: "",
     phoneNo: "",
-    pictures: null,
     locationCoords: [center[0], center[1]],
     isAgreed: false,
     availableProducts: [],
   });
-  const [file0, setFile0] = useState({
-    previewVisible: false,
-    previewImage: "",
-    previewTitle: "",
-    fileList: [],
-  });
   let [viewport, setViewport] = useState({
-    latitude: 0,
-    longitude: 0,
+    latitude: shopFormData.locationCoords[1],
+    longitude: shopFormData.locationCoords[0],
     zoom: 14,
     width: "100%",
     height: "100%",
   });
+
+  useEffect(() => {
+    if (shop) {
+      setCenter([shop.locationCoords[0], shop.locationCoords[1]]);
+      setShopFormData(shop);
+      setProducts(Object.values(shop.availableProducts));
+    }
+    return () => {};
+  }, [shop]);
+
   useEffect(() => {
     navigator.geolocation.getCurrentPosition(
       (pos) => {
@@ -72,52 +65,23 @@ const ShopForm = () => {
       }
     );
     return () => {};
+    // eslint-disable-next-line
   }, []);
-
-  useEffect(() => {
-    if (shop) {
-      setShopFormData(shop);
-      setProducts(Object.values(shop.availableProducts));
-    }
-    return () => {};
-  }, [shop]);
 
   useEffect(() => {
     setViewport((v) => ({ ...v, latitude: center[1], longitude: center[0] }));
   }, [center]);
 
-  const uploadButton = (
-    <div>
-      <PlusOutlined />
-      <div style={{ marginTop: 8 }}>Upload</div>
-    </div>
-  );
-
-  const handleCancel = () => setFile0((f) => ({ ...f, previewVisible: false }));
-
-  const handlePreview = async (file) => {
-    if (!file.url && !file.preview) {
-      file.preview = await getBase64(file.originFileObj);
-    }
-
-    setFile0((f) => ({
-      ...f,
-      previewImage: f.url || f.preview,
-      previewVisible: true,
-      previewTitle: f.name || f.url.substring(f.url.lastIndexOf("/") + 1),
-    }));
-  };
-
-  const handleChange = ({ fileList }) => setFile0((f) => ({ ...f, fileList }));
-
   function newShop() {
     const db = getDatabase();
-    set(ref(db, "shops/" + uid), shopFormData).then(() => {
-      notification.success({
-        message: "Success",
-        description: shop ? "Shop Updated!" : "Shop Created!",
-      });
-    });
+    set(ref(db, "shops/" + uid), { ...shopFormData, photos: files }).then(
+      () => {
+        notification.success({
+          message: "Success",
+          description: shop ? "Shop Updated!" : "Shop Created!",
+        });
+      }
+    );
   }
   return (
     <div className="min-h-screen w-screen">
@@ -356,27 +320,21 @@ const ShopForm = () => {
             />
           </Form.Item>
           <Form.Item label="Upload amazing pictures of your shop">
-            <Upload
-              action={`https://www.mocky.io/v2/5cc8019d300000980a055e76`}
-              listType="picture-card"
-              fileList={file0.fileList}
-              onPreview={handlePreview}
-              onChange={handleChange}
-            >
-              {file0.fileList.length >= 8 ? null : uploadButton}
-            </Upload>
-            <Modal
-              visible={file0.previewVisible}
-              title={file0.previewTitle}
-              footer={null}
-              onCancel={handleCancel}
-            >
-              <img
-                alt="example"
-                style={{ width: "100%" }}
-                src={file0.previewImage}
-              />
-            </Modal>
+            <PickerDropPane
+              apikey={process.env.REACT_APP_FILESTACK_API_KEY}
+              onSuccess={(res) => {
+                res.filesUploaded.forEach((pic) => {
+                  setFiles((f) => [...f, pic.url]);
+                });
+                notification.success({
+                  message: "Success",
+                  description: "File uploaded successfully!",
+                });
+              }}
+              onError={() => {
+                console.clear();
+              }}
+            />
           </Form.Item>
           <Form.Item required label="Locate your shop 📍">
             <div
@@ -408,14 +366,12 @@ const ShopForm = () => {
                   }
                 >
                   <div
-                    className="text-2xl"
+                    className="text-2xl bg-blue-700 w-4 h-4 transform -translate-x-2 -translate-y-2 border rounded-full"
                     style={{
                       marginTop: -(viewport.zoom ** 2.9 / 100) / 2,
                       marginLeft: -(viewport.zoom ** 2.9 / 100) / 2,
                     }}
-                  >
-                    📍
-                  </div>
+                  ></div>
                 </Marker>
               </ReactMapGL>
             </div>
@@ -475,6 +431,8 @@ const ShopForm = () => {
                   shopFormData.workEmail !== ""
                 ) {
                   newShop();
+
+                  console.log(shopFormData);
                 } else {
                   notification.warning({
                     message: "WARNING!!",
@@ -492,11 +450,13 @@ const ShopForm = () => {
               htmlType="submit"
               type="default"
             >
-              Preview
+              {shop ? "Update" : "Submit"}
             </Button>
-            <Button htmlType="reset" type="primary">
-              Clear
-            </Button>
+            {!shop ? (
+              <Button htmlType="reset" type="primary">
+                Clear
+              </Button>
+            ) : null}
           </Form.Item>
         </Form>
       </div>

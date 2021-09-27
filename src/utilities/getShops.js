@@ -18,7 +18,7 @@ const getShops = (shopsObj, currLoc) => {
     let shopCoords = Object.values(shopsObj[key].locationCoords);
     const d = distanceBtw(shopCoords, currLoc);
     if (d < 2000) {
-      finalShops.push(shopsObj[key]);
+      finalShops.push({ ...shopsObj[key], uid: key });
     }
   });
   return finalShops;
