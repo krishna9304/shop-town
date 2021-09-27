@@ -20,7 +20,7 @@ const Map = ({ hide, shops }) => {
 
   return (
     <div
-      className={`w-screen h-96 relative top-0 left-0 ${hide ? "hidden" : ""}`}
+      className={`w-screen h-96 relative top-16 left-0 ${hide ? "hidden" : ""}`}
     >
       <ReactMapGL
         mapStyle={"mapbox://styles/mapbox/streets-v11"}
