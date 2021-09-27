@@ -24,7 +24,4 @@ const getShops = (shopsObj, currLoc) => {
   return finalShops;
 };
 
-module.exports = {
-  distanceBtw,
-  getShops,
-};
+export { getShops, distanceBtw };

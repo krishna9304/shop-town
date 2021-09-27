@@ -1,0 +1,14 @@
+# name of author
+name: John Doe
+# college registeration number
+regdno: 123456789
+# github username
+github: krishna9304
+# set number (1/2/3)
+set: 1
+# problem statement number (1/2/3/4)
+question: 1
+# description of the project
+description: The project is hosted on and the link is https://create-react-app.dev/ and the project is made with ReactJS
+# credits of project
+credits: Google, Github
