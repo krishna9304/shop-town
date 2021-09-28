@@ -6,7 +6,7 @@ const ShopCard = ({ shopInfo }) => {
   const user = useSelector((state) => state.user);
   return (
     <div className="max-w-xs rounded overflow-hidden shadow-lg">
-      <div className="flex gap-1 overflow-x-auto bg-black">
+      <div className="flex gap-1 h-44 overflow-x-auto bg-black">
         {shopInfo.photos ? (
           Object.values(shopInfo.photos).map((photo, idx) => {
             return (
