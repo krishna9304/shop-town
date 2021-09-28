@@ -5,8 +5,8 @@ const ShopCard = ({ shopInfo }) => {
   const uid = shopInfo.uid;
   const user = useSelector((state) => state.user);
   return (
-    <div className="max-w-xs rounded overflow-hidden shadow-lg">
-      <div className="flex gap-1 h-44 overflow-x-auto bg-black">
+    <div className="max-w-xs w-72 mb-4 rounded overflow-hidden shadow-lg">
+      <div className="flex gap-1 h-44 w-full overflow-x-auto bg-black">
         {shopInfo.photos ? (
           Object.values(shopInfo.photos).map((photo, idx) => {
             return (
@@ -52,18 +52,20 @@ const ShopCard = ({ shopInfo }) => {
         </div>
       </div>
       <div className="px-6 pb-2">
-        {shopInfo.availableProducts? Object.keys(shopInfo.availableProducts)
-          .slice(0, 3)
-          .map((key) => {
-            return (
-              <span
-                key={key}
-                className="inline-block bg-gray-200 rounded-full px-3 py-1 text-sm font-semibold text-blue-500 mr-2 mb-2"
-              >
-                #{shopInfo.availableProducts[key]}
-              </span>
-            );
-          }):null}
+        {shopInfo.availableProducts
+          ? Object.keys(shopInfo.availableProducts)
+              .slice(0, 3)
+              .map((key) => {
+                return (
+                  <span
+                    key={key}
+                    className="inline-block bg-gray-200 rounded-full px-3 py-1 text-sm font-semibold text-blue-500 mr-2 mb-2"
+                  >
+                    #{shopInfo.availableProducts[key]}
+                  </span>
+                );
+              })
+          : null}
       </div>
     </div>
   );
