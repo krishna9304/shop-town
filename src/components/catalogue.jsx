@@ -117,7 +117,7 @@ const Catalogue = ({ finalShops, setFinalShops }) => {
           </div>
         </div>
         <div
-          className={`w-full p-6 flex flex-wrap gap-8 justify-center md:justify-start`}
+          className={`w-full p-6 flex flex-wrap gap-8 justify-center md:justify-start ${scroll>455?" mt-20":""}`}
         >
           {finalShops ? (
             finalShops.map((shop, idx) => {
