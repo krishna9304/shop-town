@@ -52,7 +52,7 @@ const ShopCard = ({ shopInfo }) => {
         </div>
       </div>
       <div className="px-6 pb-2">
-        {Object.keys(shopInfo.availableProducts)
+        {shopInfo.availableProducts? Object.keys(shopInfo.availableProducts)
           .slice(0, 3)
           .map((key) => {
             return (
@@ -63,7 +63,7 @@ const ShopCard = ({ shopInfo }) => {
                 #{shopInfo.availableProducts[key]}
               </span>
             );
-          })}
+          }):null}
       </div>
     </div>
   );
