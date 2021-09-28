@@ -150,7 +150,7 @@ const ShopProfile = () => {
                       <Text className="w-full border px-2 py-1 bg-gray-100 text-center">
                         These are some featured products available here
                       </Text>
-                      {Object.keys(shop.availableProducts).map((key) => {
+                      {shop.availableProducts?Object.keys(shop.availableProducts).map((key) => {
                         return (
                           <div
                             key={key}
@@ -159,7 +159,7 @@ const ShopProfile = () => {
                             {shop.availableProducts[key]}
                           </div>
                         );
-                      })}
+                      }):null}
                     </div>
                   </div>
                 </div>
