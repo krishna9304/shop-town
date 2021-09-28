@@ -237,7 +237,8 @@ const ShopForm = () => {
               />
               <Button
                 onClick={() => {
-                  setShopFormData((s) => ({
+                  if(product.trim().length){
+                    setShopFormData((s) => ({
                     ...s,
                     availableProducts: [...products, product],
                   }));
@@ -245,6 +246,7 @@ const ShopForm = () => {
                     return [...p, product];
                   });
                   setProduct("");
+                  }
                 }}
               >
                 Add
