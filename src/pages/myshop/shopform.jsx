@@ -14,7 +14,9 @@ import { getDatabase, ref, set } from "@firebase/database";
 import { useSelector } from "react-redux";
 import moment from "moment";
 import Text from "antd/lib/typography/Text";
-import { PickerDropPane } from "filestack-react";
+// import { PickerDropPane, PickerOverlay } from "filestack-react";
+import * as filestack from "filestack-js";
+const client = filestack.init(process.env.REACT_APP_FILESTACK_API_KEY);
 
 const ShopForm = () => {
   const { shop, user } = useSelector((state) => state);
@@ -23,6 +25,7 @@ const ShopForm = () => {
   const [products, setProducts] = useState([]);
   const [product, setProduct] = useState("");
   const [files, setFiles] = useState([]);
+  const [progress, setProgress] = useState(null);
   const [shopFormData, setShopFormData] = useState({
     shopName: "",
     shopCategory: "",
@@ -34,6 +37,7 @@ const ShopForm = () => {
     locationCoords: [center[0], center[1]],
     isAgreed: false,
     availableProducts: [],
+    photos: [],
   });
   let [viewport, setViewport] = useState({
     latitude: shopFormData.locationCoords[1],
@@ -48,6 +52,9 @@ const ShopForm = () => {
       setCenter([shop.locationCoords[0], shop.locationCoords[1]]);
       setShopFormData(shop);
       setProducts(Object.values(shop.availableProducts));
+      if (shop.photos) {
+        setFiles(Object.values(shop.photos));
+      }
     }
     return () => {};
   }, [shop]);
@@ -237,15 +244,15 @@ const ShopForm = () => {
               />
               <Button
                 onClick={() => {
-                  if(product.trim().length){
+                  if (product.trim().length) {
                     setShopFormData((s) => ({
-                    ...s,
-                    availableProducts: [...products, product],
-                  }));
-                  setProducts((p) => {
-                    return [...p, product];
-                  });
-                  setProduct("");
+                      ...s,
+                      availableProducts: [...products, product],
+                    }));
+                    setProducts((p) => {
+                      return [...p, product];
+                    });
+                    setProduct("");
                   }
                 }}
               >
@@ -322,21 +329,48 @@ const ShopForm = () => {
             />
           </Form.Item>
           <Form.Item label="Upload amazing pictures of your shop">
-            <PickerDropPane
-              apikey={process.env.REACT_APP_FILESTACK_API_KEY}
-              onSuccess={(res) => {
-                res.filesUploaded.forEach((pic) => {
-                  setFiles((f) => [...f, pic.url]);
-                });
-                notification.success({
-                  message: "Success",
-                  description: "File uploaded successfully!",
-                });
-              }}
-              onError={() => {
-                console.clear();
-              }}
-            />
+            <div className="flex gap-4">
+              <input
+                className="border p-2 bg-gray-200 rounded-md"
+                onChange={(e) => {
+                  let file = e.target.files[0];
+                  client
+                    .upload(file, {
+                      onProgress: (evt) => {
+                        setProgress(
+                          evt.totalPercent +
+                            " % " +
+                            parseInt(evt.totalBytes / 1024) +
+                            " KB uploaded."
+                        );
+                      },
+                    })
+                    .then((res) => {
+                      setFiles((f) => [...f, res.url]);
+                      notification.success({
+                        message: "Success",
+                        description: "File uploaded successfully!",
+                      });
+                      e.target.value = "";
+                    })
+                    .catch(console.error);
+                }}
+                accept="image/*"
+                type="file"
+              />
+              <div className="text-green-500 text-xs">
+                {progress !== null ? progress : ""}
+              </div>
+            </div>
+            <div className="flex flex-wrap gap-4 mt-3">
+              {files.map((item) => {
+                return (
+                  <div className="w-20 h-20">
+                    <img className="w-full h-full" src={item} alt="shopimage" />
+                  </div>
+                );
+              })}
+            </div>
           </Form.Item>
           <Form.Item required label="Locate your shop 📍">
             <div
