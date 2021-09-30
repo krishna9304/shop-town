@@ -1,0 +1,10 @@
+node_modules
+images
+yarn.lock
+yarn-error.log
+.env
+Dockerfile.dev
+Dockerfile.prod
+.git
+.gitignore
+.dockerignore
